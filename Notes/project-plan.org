@@ -1,0 +1,25 @@
+* Football Predictions
+Football tipping competitions are as old as the sport itself. 
+* Objective
+Develop a machine learning model to predict the outcome of football matches.
+* Milestones
+** Project Plan
+   DEADLINE: <2019-11-08 Fri>
+** Feature Table
+   DEADLINE: <2019-12-06 Fri>
+- [ ] Hypothesise features
+- [ ] Evaluate features
+- [ ] Source data points
+- [ ] Clean feature table
+- [ ] Checkpoint 1
+** Baseline Model
+   DEADLINE: <2020-01-03 Fri>
+- [ ] Decide marking criteria
+- [ ] Decide baseline model
+- [ ] Train model
+- [ ] Evaluate model
+- [ ] Checkpoint 2
+** Presentation
+- [ ] Decide on improvements
+- [ ] Develop application
+   DEADLINE: <2020-01-31 Fri>

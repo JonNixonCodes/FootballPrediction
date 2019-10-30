@@ -1,0 +1,6 @@
+* First Entry [2019-10-31 Thu]
+A friend gave me the idea to work on a passion project to prove to myself and others that I have the passion to go down a data scientist path. For the project I decided to work on something that I was interested in, as well as being able to showcase some of the skills which I've picked up along the way. The topic which I decided on pursuing was a machine learning model for football match outcome prediction. I've given myself 3 months to complete this project.
+
+To date, I have completed a basic project plan, with multiple milestones and deadlines for completing the project. I've also began to do some preliminary investigation on previous works which have been done on predicting the outcome of football matches.
+
+I am committing to regularly updating this logbook and making commits to this github repository in order to keep up the momementum for this project.
