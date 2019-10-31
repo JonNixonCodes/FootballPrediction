@@ -1,7 +1,9 @@
 * Football Predictions
-Football tipping competitions are as old as the sport itself. 
-* Objective
-Develop a machine learning model to predict the outcome of football matches.
+Football tipping competitions are probably as old as the sport itself. Participants attempt to predict the outcome of football matches. Points are won for making correct predictions and the winner is the person who has accrued the most points by the end of the competition. Often participants will pay an entrance fee to join the competition, which gets pooled together to form the prize money for winning. The competition typically goes over the course of an entire football season, with participants entering their tips at the beginning of each round.
+** Problem Statement
+An optimal football tipping strategy should be able to analyse all the explantory factors for the outcome of a football match and maximise the amount of points obtained in a season. Current match predicting algorithms have only had moderate success.
+** Objective
+Develop an AI strategy for maximising the points from a tipping competition using a machine learning model which predicts the outcome of football matches.
 * Milestones
 ** Project Plan
    DEADLINE: <2019-11-08 Fri>
@@ -19,6 +21,11 @@ Develop a machine learning model to predict the outcome of football matches.
 - [ ] Train model
 - [ ] Evaluate model
 - [ ] Checkpoint 2
+** AI Algorithm
+   DEADLINE: <2020-01-24 Fri>
+- [ ] Construct implementation framework
+- [ ] Decide on algorithm
+- [ ] Implement algorithm
 ** Presentation
 - [ ] Decide on improvements
 - [ ] Develop application

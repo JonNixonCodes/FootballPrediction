@@ -4,3 +4,14 @@ A friend gave me the idea to work on a passion project to prove to myself and ot
 To date, I have completed a basic project plan, with multiple milestones and deadlines for completing the project. I've also began to do some preliminary investigation on previous works which have been done on predicting the outcome of football matches.
 
 I am committing to regularly updating this logbook and making commits to this github repository in order to keep up the momementum for this project.
+* Investigated features [2019-11-01 Fri]
+As I was polishing my project plan, I had the idea to expand the scope beyond just predicting individual football matches, but to include an AI strategy for a tipping competition. This will also allow me to practice some of the AI algorithms which I learned on my exchange to the US.
+
+I also began documenting some high-level features for the model. The main themes behind the features were:
+- Past performances
+- Mentality
+- Environment
+- Schedule
+- Team
+- Manager
+- Fanbase
