@@ -7,7 +7,7 @@ I am committing to regularly updating this logbook and making commits to this gi
 * Investigated features [2019-11-01 Fri]
 As I was polishing my project plan, I had the idea to expand the scope beyond just predicting individual football matches, but to include an AI strategy for a tipping competition. This will also allow me to practice some of the AI algorithms which I learned on my exchange to the US.
 
-I also began documenting some high-level features for the model. The main themes behind the features were:
+I also began documenting some high-level drivers for the model. The main themes behind the features were:
 - Past performances
 - Mentality
 - Environment
@@ -15,3 +15,12 @@ I also began documenting some high-level features for the model. The main themes
 - Team
 - Manager
 - Fanbase
+* Feature table [2019-11-03 Sun]
+I spent the majority of yesterday converting the drivers to features which I am collating on a google sheet. Currently I have over 100 features.
+
+I've also found a few websites which have football statistics going back multiple seasons. Most useful one I've found is here: [[http://www.football-data.co.uk/][football-data.uk]]. I began work on a simple script to pull the data from the website into a csv.
+
+Next steps:
+- Continue work on downloading data from football website
+- Go through feature list and evaluate them based on: availability, importance, etc...
+- Do initial data exploration to qualify the features
