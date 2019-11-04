@@ -4,6 +4,8 @@ Football tipping competitions are probably as old as the sport itself. Participa
 An optimal football tipping strategy should be able to analyse all the explantory factors for the outcome of a football match and maximise the amount of points obtained in a season. Current match predicting algorithms have only had moderate success.
 ** Objective
 Develop an AI strategy for maximising the points from a tipping competition using a machine learning model which predicts the outcome of football matches.
+** Scope
+The scope of this project will be limited to results from the English Premier League.
 * Milestones
 ** Project Plan
    DEADLINE: <2019-11-08 Fri>

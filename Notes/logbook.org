@@ -24,3 +24,5 @@ Next steps:
 - Continue work on downloading data from football website
 - Go through feature list and evaluate them based on: availability, importance, etc...
 - Do initial data exploration to qualify the features
+* Scraping football scores [2019-11-05 Tue]
+Today I worked on a webscraper to download csv files from here: [[http://www.football-data.co.uk/englandm.php][football-data.uk]]. I used /BeautifulSoup/ python package to scrape the links to flat files that I wanted to download off the website, and then the /requests/ library to download the CSV files to my computer. The script which I ran is on the gitbub repository.
