@@ -1,0 +1,102 @@
+---
+title: "Exploring Football Data"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r include=FALSE}
+library(tidyverse)
+```
+
+```{r}
+loadData <- function(year_code, division) {
+  ret_tbl <- tibble()
+  for (yc in year_code) {
+    for (div in division) {
+      fname <- paste("../Data/",yc,"_",div,".csv",sep="")
+      tmp_tbl <- read_csv(fname) %>%
+        mutate(Season=yc,Date=as.Date(Date,format="%d/%m/%Y"))
+      ret_tbl <- bind_rows(ret_tbl,tmp_tbl)
+    }
+  }
+  return(ret_tbl)
+}
+filterTeam <- function(dat,team_name) {
+  return(filter(dat,HomeTeam==team_name|AwayTeam==team_name))
+}
+filterTeamResult <- function(dat,team_name,home_away=c("H","A")){
+  filtered_dat <- filterTeam(dat,team_name)
+  result_dat <- filtered_dat %>%
+    mutate(TM_Team = team_name) %>%
+    mutate(TM_FTR = case_when(
+      HomeTeam==team_name & FTR=="H" ~ "W",
+      AwayTeam==team_name & FTR=="A" ~ "W",
+      FTR=="D" ~ "D",
+      TRUE ~ "L")
+    ) %>%
+    arrange(desc(Date))
+  return(result_dat)
+}
+```
+
+```{r message=FALSE}
+all_data <- loadData(c("1819","1718","1617"),c("E0","E1"))
+fulham_data <- filterTeamResult(all_data,"Fulham")
+fulham_data
+```
+
+```{r}
+ggplot(all_data, aes(x=FTR,fill=FTR)) +
+  geom_bar() +
+  facet_grid(rows=vars(Div),cols=vars(Season)) +
+  ggtitle("Full Time Results")
+```
+
+```{r}
+ggplot(all_data,aes(x=FTHG+FTAG)) +
+  geom_bar() +
+  facet_grid(rows=vars(Div)) + 
+  ggtitle("Number of Goals Scored")
+```
+
+```{r}
+ggplot(all_data,aes(x=HS+AS)) +
+  geom_bar() +
+  facet_grid(rows=vars(Div)) + 
+  ggtitle("Number of Shots")
+```
+
+```{r}
+ggplot(all_data,aes(x=HC+AC)) +
+  geom_bar() +
+  facet_grid(rows=vars(Div)) + 
+  ggtitle("Number of Corners")
+```
+
+```{r}
+ggplot(all_data,aes(x=HF+AF)) +
+  geom_bar() +
+  facet_grid(rows=vars(Div)) + 
+  ggtitle("Number of Fouls")
+```
+
+```{r}
+tmp1 <- fulham_data %>%
+  mutate(
+    match3 = row_number(),
+    match2 = row_number()+1,
+    match1 = row_number()+2,
+  ) %>%
+  select(c("Date","match3","match2","match1","TM_FTR"))
+tmp2 <- as_tibble(tmp1)
+tmp3 <- as_tibble(tmp1)
+
+test <- tmp1 %>%
+  inner_join(tmp2, by=c("match3"="match2")) %>%
+  inner_join(tmp3, by=c("match3"="match1")) %>%
+  mutate(last3results = paste(TM_FTR.x,TM_FTR.y,TM_FTR, sep=""))
+
+test
+```
+

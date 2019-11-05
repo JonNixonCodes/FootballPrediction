@@ -26,3 +26,12 @@ Next steps:
 - Do initial data exploration to qualify the features
 * Scraping football scores [2019-11-05 Tue]
 Today I worked on a webscraper to download csv files from here: [[http://www.football-data.co.uk/englandm.php][football-data.uk]]. I used /BeautifulSoup/ python package to scrape the links to flat files that I wanted to download off the website, and then the /requests/ library to download the CSV files to my computer. The script which I ran is on the gitbub repository.
+* Exploring football data [2019-11-06 Wed]
+I began exploring the football data which I extracted yesterday. I'm using R-studio to do my exploration. So far I've looked at the distribution for some of the primary statistics such as:
+- Corners taken per game
+- Number of shots
+- Number of goals
+
+A few interesting factors to consider are that EPL and EFL Championship leagues have different distributions (particularly noticeable in the case of fouls per game). Another thing to look out for is variation of stats between seasons, for example in 18-19 season there were a lot fewer games drawn as opposed to previous years. Final thing to note is that a lot of the stats appear to be normally distributed.
+
+I also made some progress on extracting some of the features. I've made some headway into extracting the last 3 match results as a factor (i.e. WWW, WWL, WLL, ...). Progress can be seen in the github repository.
