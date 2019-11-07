@@ -82,21 +82,88 @@ ggplot(all_data,aes(x=HF+AF)) +
 ```
 
 ```{r}
-tmp1 <- fulham_data %>%
+home_result <- all_data %>%
   mutate(
-    match3 = row_number(),
-    match2 = row_number()+1,
-    match1 = row_number()+2,
+    TeamName=HomeTeam,
+    HomeAway = "Home",
+    Result = case_when(
+      FTR == "H" ~ "W",
+      FTR == "D" ~ "D",
+      FTR == "A" ~ "L"
+    )
   ) %>%
-  select(c("Date","match3","match2","match1","TM_FTR"))
-tmp2 <- as_tibble(tmp1)
-tmp3 <- as_tibble(tmp1)
+  select(c("Date","TeamName","HomeAway","Result"))
+away_result <- all_data %>%
+  mutate(
+    TeamName=AwayTeam,
+    HomeAway = "Away",
+    Result = case_when(
+      FTR == "H" ~ "L",
+      FTR == "D" ~ "D",
+      FTR == "A" ~ "W"
+    )
+  ) %>%
+  select(c("Date","TeamName","HomeAway","Result"))
+all_result <- rbind(home_result,away_result) %>%
+  arrange(desc(Date))
+tmp <- all_result %>%
+  arrange(desc(Date)) %>%
+  group_by(TeamName) %>%
+  mutate(
+    rank1 = row_number(),
+    rank2 = row_number()-1,
+    rank3 = row_number()-2,
+    rank4 = row_number()-3,
+    rank5 = row_number()-4,
+    rank6 = row_number()-5,
+    rank7 = row_number()-6,
+    rank8 = row_number()-7,
+    rank9 = row_number()-8,
+    rank10 = row_number()-9,
+    rank11 = row_number()-10
+  ) %>%
+  select(c("Date","TeamName","HomeAway","Result","rank1","rank2","rank3","rank4",
+           "rank5","rank6","rank7","rank8","rank9","rank10","rank11"))
+tmp1 <- tmp %>%
+  select(c("Date","TeamName","HomeAway","Result","rank1"))
+tmp2 <- tmp %>%
+  mutate(Result2=Result) %>%
+  select(c("TeamName","Result2","rank2"))
+tmp3 <- tmp %>%
+  mutate(Result3=Result) %>%
+  select(c("TeamName","Result3","rank3"))
+tmp4 <- tmp %>%
+  mutate(Result4=Result) %>%
+  select(c("TeamName","Result4","rank4"))
+tmp5 <- tmp %>%
+  mutate(Result5=Result) %>%
+  select(c("TeamName","Result5","rank5"))
+tmp6 <- tmp %>%
+  mutate(Result6=Result) %>%
+  select(c("TeamName","Result6","rank6"))
 
-test <- tmp1 %>%
-  inner_join(tmp2, by=c("match3"="match2")) %>%
-  inner_join(tmp3, by=c("match3"="match1")) %>%
-  mutate(last3results = paste(TM_FTR.x,TM_FTR.y,TM_FTR, sep=""))
+last_n_result <- tmp1 %>%
+  left_join(tmp2,by=c("TeamName"="TeamName","rank1"="rank2")) %>%
+  left_join(tmp3,by=c("TeamName"="TeamName","rank1"="rank3")) %>%
+  left_join(tmp4,by=c("TeamName"="TeamName","rank1"="rank4")) %>%
+  left_join(tmp5,by=c("TeamName"="TeamName","rank1"="rank5")) %>%
+  left_join(tmp6,by=c("TeamName"="TeamName","rank1"="rank6")) %>%
+  mutate(last_3_results = paste(Result2,Result3,Result4,sep=""))
 
-test
+last_n_result
 ```
+
+```{r}
+plt_dat <- last_n_result %>%
+  filter(!grepl("NA",last_3_results))
+plt_dat
+```
+
+```{r}
+ggplot(data=plt_dat, aes(x=fct_reorder(last_3_results,Result=="W",mean,.desc=TRUE),fill=ordered(Result, levels=c("L","D","W")))) +
+  geom_bar(position="fill")
+```
+
+
+
 

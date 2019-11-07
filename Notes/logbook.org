@@ -35,3 +35,5 @@ I began exploring the football data which I extracted yesterday. I'm using R-stu
 A few interesting factors to consider are that EPL and EFL Championship leagues have different distributions (particularly noticeable in the case of fouls per game). Another thing to look out for is variation of stats between seasons, for example in 18-19 season there were a lot fewer games drawn as opposed to previous years. Final thing to note is that a lot of the stats appear to be normally distributed.
 
 I also made some progress on extracting some of the features. I've made some headway into extracting the last 3 match results as a factor (i.e. WWW, WWL, WLL, ...). Progress can be seen in the github repository.
+* Analysing effect of past results [2019-11-08 Fri]
+Today I spent more time/effort on getting the past /n/ results as a feature. I then did some some exploration and found a strong correlation between 2+ Wins out of the last 3 resulting in a win. I also completed my project timeline and plan which I have submitted for a review.
