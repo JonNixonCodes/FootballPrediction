@@ -6,6 +6,7 @@ output:
 ---
 
 ```{r include=FALSE}
+rm(list=ls())
 library(tidyverse)
 ```
 
@@ -65,6 +66,13 @@ ggplot(all_data,aes(x=HS+AS)) +
   geom_bar() +
   facet_grid(rows=vars(Div)) + 
   ggtitle("Number of Shots")
+```
+
+```{r}
+ggplot(all_data,aes(x=abs(FTHG-FTAG))) +
+  geom_bar() +
+  facet_grid(rows=vars(Div)) +
+  ggtitle("Goal Differences")
 ```
 
 ```{r}
@@ -161,7 +169,8 @@ plt_dat
 
 ```{r}
 ggplot(data=plt_dat, aes(x=fct_reorder(last_3_results,Result=="W",mean,.desc=TRUE),fill=ordered(Result, levels=c("L","D","W")))) +
-  geom_bar(position="fill")
+  geom_bar(position="fill") +
+  ggtitle("Current Result vs. Last 3 Results")
 ```
 
 

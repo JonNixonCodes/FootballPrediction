@@ -37,3 +37,15 @@ A few interesting factors to consider are that EPL and EFL Championship leagues 
 I also made some progress on extracting some of the features. I've made some headway into extracting the last 3 match results as a factor (i.e. WWW, WWL, WLL, ...). Progress can be seen in the github repository.
 * Analysing effect of past results [2019-11-08 Fri]
 Today I spent more time/effort on getting the past /n/ results as a feature. I then did some some exploration and found a strong correlation between 2+ Wins out of the last 3 resulting in a win. I also completed my project timeline and plan which I have submitted for a review.
+* Ingesting > Feature Engineering > Analysis [2019-11-18 Mon]
+I haven't been consistent with updating the logbook and committing to github, however I haven't been idle either. 
+
+My update is as follows:
+- Decided on a framework which uses the following tools:
+  - Data mining and ingestion: Python + TinyDB
+  - Feature engineering: Python + TinyDB + Pandas
+  - Feature analysis and data exploration: R
+
+I'm learning lots of new tools in Python for data mining and ingesting, including: BeautifulSoup, TinyDB.
+
+I'm also learning to use best practices, including: importing my own functions, functional programming (helper functions and main function).
