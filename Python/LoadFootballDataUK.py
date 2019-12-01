@@ -11,6 +11,10 @@ def load_keep_columns(fname):
     keepCols = [k for k,v in colMap.items() if v==1]
     return keepCols
 
+def strip_filename_season(fname):
+    tmp = fname.split('/')[-1]
+    return tmp.split('_')[0]
+
 # Fix: remove trailing commas from csv
 def strip_trail_commas(in_file):
     lines = []
@@ -49,16 +53,17 @@ def load_to_database(dbase,dframe,additional_fields={}):
         newDoc.update(additional_fields) # Add additional fields
         dbase.insert(newDoc)
     return dbase
-        
+
 # Main Function
 def main():    
     keepCols = load_keep_columns("../Data/football-data-uk/colmap.txt")
     file_list = glob.glob("../Data/football-data-uk/*.csv")
-    db = fdb.Load()
+    db = fdb.LoadDB()
+    fduk = fdb.SetupTbl(db,'football-data-uk')
     for ind,f in enumerate(file_list):
         df = csv_to_dataframe(f)        
         df = df.filter(keepCols)
-        db = load_to_database(db,df,{'Source':'football-data-uk'})
+        load_to_database(fduk,df,{'Source':'football-data-uk','Season':strip_filename_season(f)})
         print(f"loading file ... {ind}/{len(file_list)}",end='\r',flush=True)
     print("Done")
 

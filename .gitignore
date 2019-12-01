@@ -3,3 +3,5 @@
 *~
 .Rproj.user
 /Data/*
+/Python/.ipynb_checkpoints/*
+/Python/__pycache__/*
