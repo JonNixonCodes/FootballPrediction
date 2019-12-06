@@ -50,7 +50,7 @@ I'm learning lots of new tools in Python for data mining and ingesting, includin
 
 I'm also learning to use best practices, including: importing my own functions, functional programming (helper functions and main function).
 * First model complete [2019-12-02 Mon]
-Today was a super busy day. I was able to complete the first iteration of the model which had a 49% accuracy using a decision tree classifier based on a 80/20 split of training and test data.
+Today was a super busy day. I was able to complete the first iteration of the model which had a *49% accuracy* using a decision tree classifier based on a 80/20 split of training and test data. This is a lift of 16% from random guessing.
 
 Things that I did today/last night to achieve this:
 - Feature engineering (128 features)
