@@ -27,5 +27,13 @@ def LoadDframe(data):
     return pd.DataFrame(data)
 
 # Print Dataframe
-def ExportDframe(df,file_path="../Analysis/Analysis.csv"):
+def ExportDframeFile(df,file_path="../Analysis/Analysis.csv"):
     df.to_csv(file_path)
+
+# Export Dataframe to Database
+def ImportDframe(dframe,dbase):
+    for ind,row in dframe.iterrows():
+        newDoc = dict(row)
+        dbase.insert(newDoc)
+    return dbase
+    
