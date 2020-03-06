@@ -61,3 +61,5 @@ Next steps:
 - Create Python library for feature engineering
 - Add additional features
 - Refine training model
+* AI algorithm notes [2019-12-26 Thu]
+I am considering which AI algorithm to use as a betting strategy. My research has led me to consider stochastic game theory which only uses a static strategy which only considers the current state.
