@@ -8,12 +8,14 @@ Created on Sat Jun 20 19:13:44 2020
 """
 # %% Load Libraries
 import re, requests
+import pandas as pd
 from bs4 import BeautifulSoup
 
 # %% Constants
 MAIN_URL = "http://www.football-data.co.uk/englandm.php"
 URL_REGEX = re.compile(r"mmz4281.*\.csv")
 OUTPUT_DIR = "./Data/FootballDataUK/"
+INPUT_FILEPATH = "./Data/FootballDataUK/Consolidated/FootballDataUK_93_20.csv"
 
 # %% Helper Functions
 def ExtractFileUrl(elem):
@@ -50,11 +52,12 @@ def DownloadFootballDataUK(output_dir=OUTPUT_DIR):
     print("\tFinished",end="\n", flush=False)
     return None
 
-def LoadFootballDataUK():
-    return None
+def LoadFootballDataUK(filepath=INPUT_FILEPATH):
+    return pd.read_csv(filepath, sep="\t", dtype=str)
 
 # %% Main
 def main():
+    print("Main function not implemented")
     return None
 
 if __name__=="main":
