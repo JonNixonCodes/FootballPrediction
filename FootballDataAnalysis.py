@@ -11,8 +11,6 @@ import tqdm
 import pandas as pd
 import numpy as np
 from datetime import datetime
-from sklearn import preprocessing
-from sklearn.naive_bayes import MultinomialNB
 import LoadFootballData as lfd
 
 # %% Constants
@@ -97,37 +95,55 @@ def _LoadFormGuide():
     fg = fg.sort_values(by='Datetime', ascending=False, ignore_index=True, axis='index')
     return fg
 
-def _FilterPrevResults(team, date, fg=_LoadFormGuide(), n=5):
+def _FilterPrevResults(team, date, fg=_LoadFormGuide(), n=5, HomeAway='Both'):
     ind = (fg['Team']==team)&(fg['Datetime']<date)
+    if HomeAway in ['Home','Away']:
+        ind = (ind)&(fg['HomeAway']==HomeAway)
     return fg[ind].head(n).reset_index(drop=True)
 
 # %% Extract features
 def ExtractDatetime(fd):
     return pd.to_datetime(fd['Date'],dayfirst=True, errors='coerce')
 
-def ExtractPrevResults(fd, fg=_LoadFormGuide(), n=5):
-    """Returns matrix of last N matches"""
+def ExtractPrevResults(fd, fg=_LoadFormGuide(), n=5, form='Both'):
+    """ Extract results from last N matches """
     prevResults = []
-    #colNames = [f"HLR{i}" for i in range(n)] + [f"ALR{i}" for i in range(n)]
     if 'Date' not in fd.columns:
         fd['Date'] = ExtractDatetime(fd)
     for ind,row in tqdm.tqdm(fd.iterrows(),total=fd.shape[0]):
-        prevHomeTeamResults = \
-            _FilterPrevResults(team=row['HomeTeam'],date=row['Date'],fg=fg,n=n)['Result'].values
-        prevAwayTeamResults = \
-            _FilterPrevResults(team=row['AwayTeam'],date=row['Date'],fg=fg,n=n)['Result'].values
+        if form == 'HomeAway':
+            prevHomeTeamResults = \
+                _FilterPrevResults(team=row['HomeTeam'],date=row['Date'],fg=fg,n=n,HomeAway='Home')['Result'].values
+            prevAwayTeamResults = \
+                _FilterPrevResults(team=row['AwayTeam'],date=row['Date'],fg=fg,n=n,HomeAway='Away')['Result'].values
+        else:
+            prevHomeTeamResults = \
+                _FilterPrevResults(team=row['HomeTeam'],date=row['Date'],fg=fg,n=n,HomeAway='Both')['Result'].values
+            prevAwayTeamResults = \
+                _FilterPrevResults(team=row['AwayTeam'],date=row['Date'],fg=fg,n=n,HomeAway='Both')['Result'].values            
         prevResults.append(prevHomeTeamResults)
         prevResults.append(prevAwayTeamResults)
-    #return pd.DataFrame(data=np.concatenate(prevResults).reshape(fd.shape[0],n*2),columns=colNames)
     return np.concatenate(prevResults).reshape(fd.shape[0],n*2)
 
-def ExtractFTR(fd):
-    """Returns array of full time results"""
-    return fd['FTR'].values
+def ExtractPrevResultsCount(fd, fg=_LoadFormGuide(), n=5, form='Both', 
+                            result='W'):
+    """ Extract count of previous results """
+    prevResults = ExtractPrevResults(fd=fd,fg=fg,n=n,form=form)
+    prevResults = (prevResults==result)
+    homeTeamResultsCount = np.sum(prevResults[:,range(0,n)],axis=1)
+    awayTeamResultsCount = np.sum(prevResults[:,range(n,n*2)],axis=1)
+    prevResultsCount = np.concatenate([homeTeamResultsCount,awayTeamResultsCount])
+    return prevResultsCount.reshape(2,fd.shape[0]).transpose()
 
-def ExtractHomeWins(fd):
-    """Returns array of home wins (H) vs other result (O)"""
-    fd.apply(lambda x: 'W' if x['FTR']=='')
+def ExtractResult(fd, result=None):
+    """ Extract full time results """
+    if result==None:
+        results = fd['FTR'].values
+    else:
+        results = fd.apply(lambda x: result if x['FTR']==result else 'O', 
+                           axis='columns')
+    return results
+   
     
 # %% User functions
 def LoadFootballData(divisions=KEEP_DIVS, seasons=KEEP_SEASONS):
@@ -139,34 +155,3 @@ def LoadFootballData(divisions=KEEP_DIVS, seasons=KEEP_SEASONS):
         fd = fd[fd['Season'].isin(seasons)]
     return fd.reset_index(drop=True)
 
-# %% Main
-fd = LoadFootballData()
-    
-# Assign train and test splits
-train_seasons = ['1718','1617','1516','1415','1314','1213','1112','1011','0910']
-test_seasons = ['1819']
-fd_train = fd[fd['Season'].isin(train_seasons)]
-fd_test = fd[fd['Season'].isin(test_seasons)]
-
-# Extract labels and features
-X_train = ExtractPrevResults(fd_train)
-X_test = ExtractPrevResults(fd_test)
-y_train = ExtractFTR(fd_train)
-y_test = ExtractFTR(fd_test)
-
-# Pre-process (encoding categories)
-X_le = preprocessing.LabelEncoder()
-X_le.fit(['W','L','D'])
-X_train = X_le.transform(X_train.flatten()).reshape(X_train.shape)
-X_test = X_le.transform(X_test.flatten()).reshape(X_test.shape)
-y_le = preprocessing.LabelEncoder()
-y_le.fit(['H','A','D'])
-y_train = y_le.transform(y_train)
-y_test = y_le.transform(y_test)
-
-# Train Naive Bayes Model
-model = MultinomialNB().fit(X_train, y_train)
-
-# Test Naive Bayes Model
-predicted = model.predict(X_test)
-print(f"model accuracy = {np.mean(predicted == y_test)}")
