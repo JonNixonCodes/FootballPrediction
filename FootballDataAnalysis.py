@@ -11,10 +11,11 @@ import tqdm
 import pandas as pd
 import numpy as np
 from datetime import datetime
+from sklearn import preprocessing
 import LoadFootballData as lfd
 
 # %% Constants
-KEEP_COLS = ['Div',
+_KEEP_COLS = ['Div',
              'Season',
              'Date',
              'HomeTeam',
@@ -44,7 +45,7 @@ KEEP_COLS = ['Div',
              'HR',
              'AR']
 
-KEEP_SEASONS = ['1819',
+_KEEP_SEASONS = ['1819',
                 '1718',
                 '1617',
                 '1516',
@@ -55,7 +56,11 @@ KEEP_SEASONS = ['1819',
                 '1011',
                 '0910']
 
-KEEP_DIVS = ['E0']
+_KEEP_DIVS = ['E0']
+
+# %% Global variables
+_fg = None # Form guide
+_le = dict() # Hashed label encoders
 
 # %% Helper functions
 def _WinLossDraw(HomeAway,FTR):
@@ -95,18 +100,43 @@ def _LoadFormGuide():
     fg = fg.sort_values(by='Datetime', ascending=False, ignore_index=True, axis='index')
     return fg
 
-def _FilterPrevResults(team, date, fg=_LoadFormGuide(), n=5, HomeAway='Both'):
+def _FilterPrevResults(team, date, fg=_fg, n=5, HomeAway='Both'):
+    if fg is None:
+        global _fg        
+        fg = _fg = _LoadFormGuide()    
     ind = (fg['Team']==team)&(fg['Datetime']<date)
     if HomeAway in ['Home','Away']:
         ind = (ind)&(fg['HomeAway']==HomeAway)
     return fg[ind].head(n).reset_index(drop=True)
 
+# %% Pre-processing
+def EncodeCategories(arr, categories):
+    global _le
+    hashKey = "".join(categories)
+    if hashKey not in _le.keys():
+        _le[hashKey] = preprocessing.LabelEncoder()
+        _le[hashKey].fit(categories)
+    le = _le[hashKey]
+    return le.transform(arr)
+
+def DecodeCategories(arr, categories):
+    global _le
+    hashKey = "".join(categories)
+    if hashKey not in _le.keys():
+        _le[hashKey] = preprocessing.LabelEncoder()
+        _le[hashKey].fit(categories)
+    le = _le[hashKey]
+    return le.inverse_transform(arr)
+
 # %% Extract features
 def ExtractDatetime(fd):
     return pd.to_datetime(fd['Date'],dayfirst=True, errors='coerce')
 
-def ExtractPrevResults(fd, fg=_LoadFormGuide(), n=5, form='Both'):
+def ExtractPrevResults(fd, fg=_fg, n=5, form='Both'):
     """ Extract results from last N matches """
+    if fg is None:
+        global _fg        
+        fg = _fg = _LoadFormGuide()    
     prevResults = []
     if 'Date' not in fd.columns:
         fd['Date'] = ExtractDatetime(fd)
@@ -125,9 +155,12 @@ def ExtractPrevResults(fd, fg=_LoadFormGuide(), n=5, form='Both'):
         prevResults.append(prevAwayTeamResults)
     return np.concatenate(prevResults).reshape(fd.shape[0],n*2)
 
-def ExtractPrevResultsCount(fd, fg=_LoadFormGuide(), n=5, form='Both', 
+def ExtractPrevResultsCount(fd, fg=_fg, n=5, form='Both', 
                             result='W'):
     """ Extract count of previous results """
+    if fg is None:
+        global _fg        
+        fg = _fg = _LoadFormGuide()    
     prevResults = ExtractPrevResults(fd=fd,fg=fg,n=n,form=form)
     prevResults = (prevResults==result)
     homeTeamResultsCount = np.sum(prevResults[:,range(0,n)],axis=1)
@@ -143,12 +176,11 @@ def ExtractResult(fd, result=None):
         results = fd.apply(lambda x: result if x['FTR']==result else 'O', 
                            axis='columns')
     return results
-   
     
 # %% User functions
-def LoadFootballData(divisions=KEEP_DIVS, seasons=KEEP_SEASONS):
+def LoadFootballData(divisions=_KEEP_DIVS, seasons=_KEEP_SEASONS):
     fd = lfd.LoadFootballDataUK()
-    fd = fd.filter(KEEP_COLS, axis='columns')
+    fd = fd.filter(_KEEP_COLS, axis='columns')
     if type(divisions)==list:
         fd = fd[fd['Div'].isin(divisions)]
     if type(seasons)==list:
