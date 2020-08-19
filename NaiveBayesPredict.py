@@ -66,6 +66,10 @@ pred = model.predict(X_test)
 print(f"model accuracy = {np.mean(pred==y_test)}")
 
 # %% Analyse results
-pred = fda.DecodeCategories(pred, categories=labels)
-y_test = fda.DecodeCategories(y_test, categories=labels)
-result_df = pd.DataFrame(np.concatenate([np.transpose(X_test).flatten(),pred,y_test]).reshape(10,380).transpose())
+pred = pd.DataFrame(fda.DecodeCategories(pred,categories=labels),columns=['Prediction'])
+y_test = pd.DataFrame(fda.DecodeCategories(y_test,categories=labels),columns=['Label'])
+X_prevResults = pd.DataFrame(fda.DecodeCategories(X_test[:,[x for x in range(6)]].flatten(), categories=results).reshape(X_test.shape[0],6),columns=['H1','H2','H3','A1','A2','A3'])
+X_homeTeam = pd.DataFrame(fda.DecodeCategories(X_test[:,6],categories=teams),columns=['HomeTeam'])
+X_awayTeam = pd.DataFrame(fda.DecodeCategories(X_test[:,7],categories=teams),columns=['AwayTeam'])
+results_df = pd.concat([X_prevResults,X_homeTeam,X_awayTeam,pred,y_test], axis='columns')
+#result_df = pd.DataFrame(np.concatenate([np.transpose(X_test).flatten(),pred,y_test]).reshape(10,380).transpose())
