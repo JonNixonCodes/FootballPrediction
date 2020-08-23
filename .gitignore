@@ -2,8 +2,8 @@
 *.pdf
 *~
 .Rproj.user
-/Data/*
-/Python/.ipynb_checkpoints/*
-/Python/__pycache__/*
-/.spyproject/*
-/__pycache__/*
+Data/*
+Python/.ipynb_checkpoints/*
+Python/__pycache__/*
+.spyproject/*
+__pycache__/*
