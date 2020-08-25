@@ -3,6 +3,7 @@
 *~
 .Rproj.user
 Data/*
+Features/*
 Python/.ipynb_checkpoints/*
 Python/__pycache__/*
 .spyproject/*

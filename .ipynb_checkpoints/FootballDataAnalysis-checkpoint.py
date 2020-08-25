@@ -187,8 +187,5 @@ def LoadFootballData(divisions=_KEEP_DIVS, seasons=_KEEP_SEASONS):
         fd = fd[fd['Season'].isin(seasons)]
     return fd.reset_index(drop=True)
 
-def LoadTeamResults():
+def LoadFormGuide():
     return _LoadFormGuide()
-
-def LoadMatchData():
-    return LoadFootballData()
