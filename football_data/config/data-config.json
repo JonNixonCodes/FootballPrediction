@@ -1,6 +1,6 @@
 {
-    "methods": {
-        "get_csv": {
+    "data_sources": {
+        "csv": {
             "football_data_uk_full": {
                 "description":"Historical EPL match statistics",
                 "refresh_schedule":null,

@@ -14,15 +14,20 @@ Created on Fri Sep 18 19:15:17 2020
 # %% Import libraries
 import json, requests, time, tqdm, pandas as pd
 
-# %% Define constants
-_EXTRACT_CONFIG_PATH = "./config/extract-config.json"
-
 # %% Define Extractor
-class Extractor:
+class Extractor():
+    """ 
+    Extractor class for extracting football data from various sources
     
-    def __init__(self):
-        self.config = json.load(open(_EXTRACT_CONFIG_PATH))
-        self.get_csv_config = self.config['methods']['get_csv']
+    functions:
+        list_csv_sources()
+        get_csv()
+            
+    """
+    
+    def __init__(self, data_config_path):
+        self.config = json.load(open(data_config_path))
+        self.csv_config = self.config['data_sources']['csv']
     
     def __parse_csv(self, txt, newline="\r\n", delimiter=","):
         col_names_dict = {}
@@ -40,9 +45,15 @@ class Extractor:
                 break
         return data    
     
+    def list_csv_sources(self):
+        source_list = []
+        for k,v in self.csv_config.items():
+            source_list.append(k)
+        return print(source_list)
+    
     def get_csv(self, source_name, timeout=0.1):
         data = []
-        source_list = self.get_csv_config[source_name]['source_list']
+        source_list = self.csv_config[source_name]['source_list']
         for source in tqdm.tqdm(source_list,total=len(source_list)):
             r = requests.get(source, allow_redirects=True)
             data.extend(self.__parse_csv(r.text))
