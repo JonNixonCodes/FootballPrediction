@@ -58,4 +58,4 @@ class Extractor():
             r = requests.get(source, allow_redirects=True)
             data.extend(self.__parse_csv(r.text))
             time.sleep(timeout)
-        return pd.DataFrame(data)
+        return pd.DataFrame(data, dtype=str)
