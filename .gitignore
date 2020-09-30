@@ -1,10 +1,9 @@
-*.csv
-*.pdf
-*~
-.Rproj.user
+# Ignore data files
 Data/*
-Features/*
-Python/.ipynb_checkpoints/*
-Python/__pycache__/*
+*.csv
+
+# Ignore IDE folders
 .spyproject/*
+.ipynb_checkpoints/*
+.vscode/*
 __pycache__/*

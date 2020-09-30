@@ -12,7 +12,7 @@ Created on Tue Sep 22 21:31:44 2020
 @author: JonNixonCodes
 """
 # %% Import libraries
-import json, tqdm, datetime, pandas as pd, numpy as np
+import json, tqdm, datetime, re, pandas as pd, numpy as np
 from mongoengine import *
 from football_data.extract import Extractor
 from football_data.schema import Match
@@ -70,6 +70,14 @@ class Ingestor:
             pass
         return date_time
     
+    def __parse_season(self, source):
+        season = None
+        pattern = re.compile("/\d{4}/")
+        tmp_l = pattern.findall(source)
+        if len(tmp_l)>0:
+            season = tmp_l[0].strip("/")
+        return season
+    
     def ingest_match(self,source_name):
         data_dict = self.csv_config[source_name]['data_dict']
         match_df = self.extractor.get_csv(source_name)
@@ -79,12 +87,14 @@ class Ingestor:
                                      away_team=match_data['away_team'],
                                      date=match_data['date'])
             for k,v in match_data.items():
-                if k not in ['div','time']:
+                if k not in ['div','time','source']:
                     match[k] = v
             if 'date' in match_data and 'time' in match_data:
                 match['date_time'] = self.__format_date_time(match_data['date'],match_data['time'])
             if 'div' in match_data:
                 match['competition'] = match_data['div']
+            if 'source' in match_data:
+                match['season'] = self.__parse_season(match_data['source'])
             match.save()
     
     

@@ -56,6 +56,9 @@ class Extractor():
         source_list = self.csv_config[source_name]['source_list']
         for source in tqdm.tqdm(source_list,total=len(source_list)):
             r = requests.get(source, allow_redirects=True)
-            data.extend(self.__parse_csv(r.text))
+            source_data = self.__parse_csv(r.text)
+            for i in range(len(source_data)):
+                source_data[i]['Source'] = source 
+            data.extend(source_data)
             time.sleep(timeout)
         return pd.DataFrame(data, dtype=str)
