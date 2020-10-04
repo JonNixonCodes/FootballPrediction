@@ -78,10 +78,9 @@ class Ingestor:
             season = tmp_l[0].strip("/")
         return season
     
-    def ingest_match(self,source_name):
+    def ingest_match(self,source_name,extract_df):
         data_dict = self.csv_config[source_name]['data_dict']
-        match_df = self.extractor.get_csv(source_name)
-        for ind,row in tqdm.tqdm(match_df.iterrows(), total=match_df.shape[0]):
+        for ind,row in tqdm.tqdm(extract_df.iterrows(), total=extract_df.shape[0]):
             match_data = self.__read_row_data(row,data_dict)
             match = self.__get_match(home_team=match_data['home_team'],
                                      away_team=match_data['away_team'],
